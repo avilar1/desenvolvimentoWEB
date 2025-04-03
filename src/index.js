@@ -1,10 +1,6 @@
+
+
 /*
-Professor: não aguarde muita elaboração nos meus exercícios, 
-visto que também estou aprendendo como os colegas.
-Os trabalhos não representam a qualidade do trabalho final.
-*/
-
-
 const express = require("express");
 
 const app = express() ;
@@ -23,9 +19,6 @@ function exemplo(req, res){
 }
 
 
-/*
-ALUNOS
-*/
 
 
 app.post("/alunos", (req, res) => {
@@ -65,7 +58,7 @@ app.patch("/alunos/:id", (req, res) => {
     const {nome} = req.body;
     const id = req.params.id;
     const aluno = alunos.find(aluno => aluno.id == id);
-    //const aluno = alunos[id];
+
 
     if(nome){
         aluno.nome = nome;
@@ -80,9 +73,6 @@ app.delete("/alunos/:id", (req, res) => {
     res.status(200).send();
 })
 
-/*
-CURSOS
-*/
 
 app.post("/cursos", (req, res) => {
     const {nome, periodo} = req.body;
@@ -141,3 +131,5 @@ app.delete("/cursos/:id", (req, res) => {
 app.listen(3000, () => {
     console.log("Servidor rodando na porta 3000");
 });
+
+*/
