@@ -32,5 +32,5 @@ app.delete('/cursos/:cursoId/alunos/:alunoId', cursoController.removeAluno);
 
 
 app.listen(3000, () => {
-    console.log("Servidor rodando na porta 3000");
+    console.log("Servidor rodando na porta 3000!");
 });
