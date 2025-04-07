@@ -2,22 +2,39 @@ import { Curso } from "../model/Curso";
 import { cursoRepository } from "../repository/CursoRepository";
 
 export const cursoService = {
-    findAll: () => {
-        return cursoRepository.findAll();
+    findAll: async () => {
+        return await cursoRepository.findAll();
     },
-    findById: (id: number) => {
-        return cursoRepository.findById(id);
+
+    findById: async (id: number) => {
+        return await cursoRepository.findById(id);
     },
-    save: (curso: Curso) => {
-        return cursoRepository.save(curso);
+
+    save: async (curso: Curso) => {
+        return await cursoRepository.save(curso);
     },
-    update: (id: number, curso: Curso) => {
-        return cursoRepository.update(id, curso);
+
+    update: async (id: number, curso: Curso) => {
+        return await cursoRepository.update(id, curso);
     },
-    delete: (id: number) => {
-        return cursoRepository.delete(id);
+
+    delete: async (id: number) => {
+        return await cursoRepository.delete(id);
     },
-    tamanho: () => {
-        return cursoRepository.tamanho();
+
+    addAluno: async (cursoId: number, alunoId: number) => {
+        return await cursoRepository.addAluno(cursoId, alunoId);
     },
+
+    removeAluno: async (cursoId: number, alunoId: number) => {
+        return await cursoRepository.removeAluno(cursoId, alunoId);
+    },
+
+    getAlunos: async (cursoId: number) => {
+        return await cursoRepository.getAlunos(cursoId);
+    },
+
+    getCursoComAlunos: async (cursoId: number) => {
+        return await cursoRepository.getCursoComAlunos(cursoId);
+    }
 }

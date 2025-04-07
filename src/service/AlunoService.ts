@@ -4,51 +4,43 @@ import { cursoRepository } from "../repository/CursoRepository";
 import { cursoService} from "./CursoService";
 
 export const alunoService = {
-    findAll: () => {
-        return alunoRepository.findAll();
-    },
-    findById: (id: number) => {
-        return alunoRepository.findById(id);
-    },
-    save: (aluno: Aluno) => {
-        return alunoRepository.save(aluno);
-    },
-    update: (id: number, aluno: Aluno) => {
-        return alunoRepository.update(id, aluno);
-    },
-    delete: (id: number) => {
-        return alunoRepository.delete(id);
-    },
-    tamanho: () => {
-        return alunoRepository.tamanho();
-    },
-    matricular: (alunoId: number, cursoId: number) => {
-        const aluno = alunoRepository.findById(alunoId);
-        const curso = cursoRepository.findById(cursoId);
-        
-        if (!aluno || !curso) return null;
-        
-        aluno.cursoId = cursoId;
-        return alunoRepository.update(alunoId, aluno);
-    },
-    desmatricular: (alunoId: number) => {
-        const aluno = alunoRepository.findById(alunoId);
-        if (!aluno) return null;
-        
-        aluno.cursoId = undefined;
-        return alunoRepository.update(alunoId, aluno);
+    findAll: async () => {
+        return await alunoRepository.findAll();
     },
 
-    getAlunoComCurso: (alunoId: number) => {
-        const aluno = alunoRepository.findById(alunoId);
-        if (!aluno) return null;
-
-        const curso = aluno.cursoId ? cursoService.findById(aluno.cursoId) : undefined;
-        
-        return {
-            ...aluno,
-            curso
-        };
+    findById: async (id: number) => {
+        return await alunoRepository.findById(id);
     },
-    
-}
+
+    save: async (aluno: Aluno) => {
+        return await alunoRepository.save(aluno);
+    },
+
+    update: async (id: number, aluno: Aluno) => {
+        return await alunoRepository.update(id, aluno);
+    },
+
+    delete: async (id: number) => {
+        return await alunoRepository.delete(id);
+    },
+
+    tamanho: async () => {
+        return await alunoRepository.tamanho();
+    },
+
+    addCurso: async (alunoId: number, cursoId: number) => {
+        return await alunoRepository.addCurso(alunoId, cursoId);
+    },
+
+    removeCurso: async (alunoId: number, cursoId: number) => {
+        return await alunoRepository.removeCurso(alunoId, cursoId);
+    },
+
+    getCursos: async (alunoId: number) => {
+        return await alunoRepository.getCursos(alunoId);
+    },
+
+    getAlunoWithCursos: async (alunoId: number) => {
+        return await alunoRepository.getAlunoComCursos(alunoId);
+    }
+};

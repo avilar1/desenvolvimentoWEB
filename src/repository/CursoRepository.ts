@@ -1,33 +1,62 @@
 import { Curso } from "../model/Curso";
+import database from '../db';
 
-const cursos: Curso[] = [];
+//const cursos: Curso[] = [];
+
 export const cursoRepository = {
-    findAll: () => {
-        return cursos;
+    findAll: async () => {
+        return await database.select().from('curso');
     },
-    findById: (id: number) => {
-        return cursos.find(curso => curso.id === id);
+
+    findById: async (id: number) => {
+        return await database('curso').where({ id }).first();
     },
-    save: (curso: Curso) => {
-        cursos.push(curso);
-        return curso;
+
+    save: async (curso: Omit<Curso, 'id'>) => {
+        const [id] = await database('curso').insert(curso).returning('id');
+        return id;
     },
-    update: (id: number, curso: Curso) => {
-        const index = cursos.findIndex(c => c.id === id);
-        if (index !== -1) {
-            cursos[index] = curso;
-            return curso;
-        }
-        return null;
+
+    update: async (id: number, curso: Partial<Curso>) => {
+        await database('curso').where({ id }).update(curso);
+        return await database('curso').where({ id }).first();
     },
-    delete: (id: number) => {
-        const index = cursos.findIndex(c => c.id === id);
-        if (index !== -1) {
-            return cursos.splice(index, 1)[0];
-        }
-        return null;
+
+    delete: async (id: number) => {
+        return await database('curso').where({ id }).del();
     },
-    tamanho: () => {
-        return cursos.length;
+
+    // Métodos para relação com alunos
+    addAluno: async (cursoId: number, alunoId: number) => {
+        await database('aluno_curso').insert({
+            curso_id: cursoId,
+            aluno_id: alunoId
+        });
     },
-}
+
+    removeAluno: async (cursoId: number, alunoId: number) => {
+        await database('aluno_curso')
+            .where({ curso_id: cursoId, aluno_id: alunoId })
+            .del();
+    },
+
+    getAlunos: async (cursoId: number) => {
+        return await database('aluno')
+            .join('aluno_curso', 'aluno.id', 'aluno_curso.aluno_id')
+            .where('aluno_curso.curso_id', cursoId);
+    },
+
+    getCursoComAlunos: async (cursoId: number) => {
+        const curso = await database('curso').where({ id: cursoId }).first();
+        if (!curso) return null;
+
+        const alunos = await database('aluno')
+            .join('aluno_curso', 'aluno.id', 'aluno_curso.aluno_id')
+            .where('aluno_curso.curso_id', cursoId);
+
+        return {
+            ...curso,
+            alunos
+        };
+    }
+};
