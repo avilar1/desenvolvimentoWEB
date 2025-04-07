@@ -4,6 +4,11 @@ node_modules/
 # Arquivos de build
 dist/
 
+#temporários
+temp/
+tmp/
+.cache/
+
 # Ambiente
 .env
 .env.local
