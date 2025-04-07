@@ -1,14 +1,36 @@
 {
   "name": "psaca",
   "version": "1.0.0",
-  "description": "",
+  "description": "exercícios de desenvolvimento web - cefet-rj - SI - 2025.1",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node src/app.js",
+    "build": "tsc",
+    "dev": "ts-node -r dotenv/config src/app.ts"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "express": "^4.21.2"
+    "dotenv": "^16.4.7",
+    "express": "^4.21.2",
+    "knex": "^3.1.0",
+    "pg": "^8.14.1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/avilar1/desenvolvimentoWEB.git"
+  },
+  "keywords": [],
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/avilar1/desenvolvimentoWEB/issues"
+  },
+  "homepage": "https://github.com/avilar1/desenvolvimentoWEB#readme",
+  "devDependencies": {
+    "@types/express": "^5.0.1",
+    "@types/node": "^22.14.0",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.8.2"
   }
 }
