@@ -1,4 +1,4 @@
-import { Curso } from "../model/Curso";
+import Curso from "../model/Curso";
 import { cursoRepository } from "../repository/CursoRepository";
 
 export const cursoService = {

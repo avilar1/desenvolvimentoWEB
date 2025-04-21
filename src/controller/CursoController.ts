@@ -2,7 +2,7 @@ import { Request, Response } from 'express';
 import { cursoService } from '../service/CursoService';
 
 import { cursoRepository } from '../repository/CursoRepository';
-import { Curso } from '../model/Curso';
+import Curso from '../model/Curso';
 
 export const cursoController = {
     post: async (req: Request, res: Response) => {

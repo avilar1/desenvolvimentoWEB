@@ -1,4 +1,4 @@
-import { Aluno } from "../model/Aluno";
+import Aluno  from "../model/Aluno";
 import { alunoRepository } from "../repository/AlunoRepository";
 import { cursoRepository } from "../repository/CursoRepository";
 import { cursoService} from "./CursoService";

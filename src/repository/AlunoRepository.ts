@@ -1,59 +1,78 @@
-import { Aluno } from "../model/Aluno";
-
-import database from '../db';
-
-//const alunos: Aluno[] = [];
+import Aluno from "../model/Aluno";
+import Curso from "../model/Curso";
+import { Op } from 'sequelize';
 
 export const alunoRepository = {
-    findAll: async () => {
-        return await database.select().from('aluno');
-    },
-    findById: async (id: number) => {
-        return await database('aluno').where({ id }).first();
-    },
-    save: async (aluno: Aluno) => {
-        const [id] = await database('aluno').insert(aluno).returning('id');
-        return id;
-    },
-    update: async (id: number, aluno: Aluno) => {
-        await database('aluno').where({ id }).update(aluno);
-    },
-    delete: async (id: number) => {
-        await database('aluno').where({ id }).del();
-    },
-    tamanho: async () => {
-        const result = await database('aluno').count('* as count').first();
-        return result?.count || 0;
-    },
-    addCurso: async (alunoId: number, cursoId: number) => {
-        await database('aluno_curso').insert({
-            aluno_id: alunoId,
-            curso_id: cursoId
-        });
-    },
-    removeCurso: async (alunoId: number, cursoId: number) => {
-        await database('aluno_curso')
-            .where({ aluno_id: alunoId, curso_id: cursoId })
-            .del();
-    },
+  findAll: async () => {
+    return await Aluno.findAll();
+  },
 
-    getCursos: async (alunoId: number) => {
-        return await database('curso')
-            .join('aluno_curso', 'curso.id', 'aluno_curso.curso_id')
-            .where('aluno_curso.aluno_id', alunoId);
-    },
+  findById: async (id: number) => {
+    return await Aluno.findByPk(id);
+  },
 
-    getAlunoComCursos: async (alunoId: number) => {
-        const aluno = await database('aluno').where({ id: alunoId }).first();
-        if (!aluno) return null;
+  save: async (aluno: Aluno) => {
+    return await Aluno.create(aluno);
+  },
 
-        const cursos = await database('curso')
-            .join('aluno_curso', 'curso.id', 'aluno_curso.curso_id')
-            .where('aluno_curso.aluno_id', alunoId);
-
-        return {
-            ...aluno,
-            cursos
-        };
+  update: async (id: number, aluno: Partial<Aluno>) => {
+    const [affectedCount] = await Aluno.update(aluno, { where: { id } });
+    if (affectedCount > 0) {
+      return await Aluno.findByPk(id);
     }
-    }
+    return null;
+  },
+
+  delete: async (id: number) => {
+    const affectedRows = await Aluno.destroy({ where: { id } });
+    return affectedRows > 0;
+  },
+
+  tamanho: async () => {
+    return await Aluno.count();
+  },
+
+  addCurso: async (alunoId: number, cursoId: number) => {
+    const aluno = await Aluno.findByPk(alunoId);
+    if (!aluno) return false;
+    
+    const curso = await Curso.findByPk(cursoId);
+    if (!curso) return false;
+    
+    await aluno.addCurso(curso);
+    return true;
+  },
+
+  removeCurso: async (alunoId: number, cursoId: number) => {
+    const aluno = await Aluno.findByPk(alunoId);
+    if (!aluno) return false;
+    
+    const curso = await Curso.findByPk(cursoId);
+    if (!curso) return false;
+    
+    await aluno.removeCurso(curso);
+    return true;
+  },
+
+  getCursos: async (alunoId: number) => {
+    const aluno = await Aluno.findByPk(alunoId, {
+      include: [{
+        model: Curso,
+        as: 'cursos',
+        through: { attributes: [] } // não inclui atributos da tabela de junção
+      }]
+    });
+    
+    return aluno?.get('cursos') || [];
+  },
+
+  getAlunoComCursos: async (alunoId: number) => {
+    return await Aluno.findByPk(alunoId, {
+      include: [{
+        model: Curso,
+        as: 'cursos',
+        through: { attributes: [] }
+      }]
+    });
+  }
+};

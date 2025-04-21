@@ -1,11 +1,13 @@
 import { Request, Response } from 'express';
 import { alunoService } from '../service/AlunoService';
-import { Aluno } from '../model/Aluno';
+import Aluno from '../model/Aluno';
+type AlunoCreateInput = import('../model/Aluno').AlunoCreateInput;
 
 export const alunoController = {
     post: async (req: Request, res: Response) => {
         try {
             const { nome, idade } = req.body;
+            //const aluno: AlunoCreateInput = { nome, idade };
             const aluno: Aluno = { nome, idade };
             const id = await alunoService.save(aluno);
             res.status(201).json({ id, nome, idade });
